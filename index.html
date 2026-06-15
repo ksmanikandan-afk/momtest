@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mom Test — Customer Interview Exercises</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, serif;
+    background: #F7F5F0;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 36px 32px;
+    max-width: 640px;
+    width: 100%;
+  }
+  .hidden { display: none; }
+  .eyebrow {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: normal;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    color: #111;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: normal;
+    color: #111;
+    margin-bottom: 16px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 20px 0;
+  }
+  .rules-block {
+    background: #F7F5F0;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .rule-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .rule-item:last-child { margin-bottom: 0; }
+  .rule-num {
+    font-weight: bold;
+    color: #888;
+    min-width: 18px;
+    margin-top: 1px;
+    font-size: 12px;
+  }
+  .credit {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #999;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  /* Exercise choice cards */
+  .choice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 0;
+  }
+  .choice-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px 18px;
+    cursor: pointer;
+    background: #fff;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .choice-card:hover { border-color: #999; background: #fafafa; }
+  .choice-label {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-bottom: 6px;
+  }
+  .choice-title {
+    font-size: 16px;
+    color: #111;
+    margin-bottom: 6px;
+    font-family: Georgia, serif;
+  }
+  .choice-desc {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.5;
+  }
+
+  /* Shared question UI */
+  .q-meta {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .scenario-box {
+    background: #F7F5F0;
+    border-left: 3px solid #bbb;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 18px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #555;
+    font-style: italic;
+  }
+  .question-text {
+    font-size: 17px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    color: #111;
+  }
+  .feedback-box {
+    display: none;
+    background: #F7F5F0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-rule {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .feedback-text {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.6;
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 13px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary {
+    width: 100%;
+    padding: 11px;
+    background: #fff;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn-secondary:hover { background: #fafafa; border-color: #bbb; }
+
+  /* Classifier buttons */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .btn-answer {
+    flex: 1;
+    padding: 16px 10px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .btn-answer:hover:not(:disabled) { background: #F7F5F0; border-color: #bbb; }
+  .btn-answer:disabled { cursor: default; }
+  .btn-answer.correct { background: #EAF5EC; border-color: #4caf50; color: #2e7d32; }
+  .btn-answer.wrong   { background: #FDECEA; border-color: #e57373; color: #c62828; }
+  .btn-answer.reveal  { background: #EAF5EC; border-color: #4caf50; color: #2e7d32; }
+  .btn-next {
+    width: 100%;
+    padding: 13px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    display: none;
+  }
+  .btn-next.show { display: block; }
+  .btn-next:hover { background: #333; }
+
+  /* Results */
+  .score-display { text-align: center; margin: 10px 0 24px; }
+  .score-big { font-size: 52px; font-weight: normal; color: #111; line-height: 1; }
+  .score-label { font-family: Arial, sans-serif; font-size: 13px; color: #888; margin-top: 6px; }
+  .score-msg { font-family: Arial, sans-serif; font-size: 14px; color: #444; text-align: center; margin-bottom: 24px; line-height: 1.6; }
+  .rule-breakdown { margin-bottom: 24px; }
+  .rule-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .rule-label { width: 115px; color: #555; font-size: 12px; flex-shrink: 0; font-family: Arial, sans-serif; }
+  .rule-bar-wrap { flex: 1; height: 7px; background: #eee; border-radius: 4px; overflow: hidden; }
+  .rule-bar { height: 100%; background: #1a1a1a; border-radius: 4px; }
+  .rule-score-txt { width: 30px; text-align: right; color: #555; font-size: 12px; flex-shrink: 0; font-family: Arial, sans-serif; }
+
+  /* Makeover */
+  .bad-label {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #c62828;
+    margin-bottom: 6px;
+  }
+  .rewrite-label {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #555;
+    margin-bottom: 6px;
+    margin-top: 18px;
+  }
+  textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: Georgia, serif;
+    font-size: 15px;
+    color: #111;
+    resize: none;
+    line-height: 1.5;
+    background: #fff;
+    margin-bottom: 14px;
+  }
+  textarea:focus { outline: none; border-color: #999; }
+  textarea::placeholder { color: #bbb; }
+  .model-answer-box {
+    display: none;
+    background: #EAF5EC;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .model-answer-box.show { display: block; }
+  .model-answer-label {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #2e7d32;
+    margin-bottom: 5px;
+  }
+  .model-answer-text {
+    font-size: 15px;
+    color: #1b5e20;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .model-why {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #388e3c;
+    line-height: 1.6;
+  }
+  .self-rate {
+    display: none;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .self-rate.show { display: flex; }
+  .btn-rate {
+    flex: 1;
+    padding: 12px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #ddd;
+    background: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s;
+  }
+  .btn-rate:hover { background: #F7F5F0; }
+  .btn-rate.selected-got { background: #EAF5EC; border-color: #4caf50; color: #2e7d32; }
+  .btn-rate.selected-missed { background: #FDECEA; border-color: #e57373; color: #c62828; }
+
+  /* Makeover results */
+  .mk-breakdown { margin-bottom: 20px; }
+  .mk-result-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+  }
+  .mk-result-row:last-child { border-bottom: none; }
+  .mk-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-got { background: #4caf50; }
+  .dot-missed { background: #e57373; }
+  .dot-skip { background: #ddd; }
+
+  @media (max-width: 480px) {
+    .card { padding: 24px 18px; }
+    h1 { font-size: 22px; }
+    .choice-grid { grid-template-columns: 1fr; }
+    .question-text { font-size: 15px; }
+    .score-big { font-size: 42px; }
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- HOME SCREEN -->
+  <div id="screen-home">
+    <div class="eyebrow">Customer Interview Skills</div>
+    <h1>The Mom Test</h1>
+    <hr class="divider">
+    <div class="rules-block">
+      <p style="font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:#555;margin-bottom:10px;">Three rules for better customer conversations:</p>
+      <div class="rule-item"><span class="rule-num">1.</span><span>Talk about their life instead of your idea</span></div>
+      <div class="rule-item"><span class="rule-num">2.</span><span>Ask about specifics in the past instead of generics or opinions about the future</span></div>
+      <div class="rule-item"><span class="rule-num">3.</span><span>Talk less and listen more</span></div>
+      <p style="font-family:Arial,sans-serif;font-size:11px;color:#aaa;margin-top:12px;">Fitzpatrick, R. (2013). <em>The Mom Test: How to talk to customers &amp; learn if your business is a good idea when everyone is lying to you.</em> Robfitz Ltd.</p>
+    </div>
+    <p style="font-family:Arial,sans-serif;font-size:13px;color:#555;margin-bottom:20px;line-height:1.7;">Choose an exercise below to practise applying the Mom Test to real customer interview questions.</p>
+    <div class="choice-grid">
+      <button class="choice-card" onclick="startClassifier()">
+        <div class="choice-label">Exercise 1</div>
+        <div class="choice-title">Red / Green Classifier</div>
+        <div class="choice-desc">Decide whether each question passes or fails the Mom Test. 7 questions per round.</div>
+      </button>
+      <button class="choice-card" onclick="startMakeover()">
+        <div class="choice-label">Exercise 2</div>
+        <div class="choice-title">Question Makeover</div>
+        <div class="choice-desc">Rewrite a bad question into a better one, then compare with the model answer. 5 questions per round.</div>
+      </button>
+    </div>
+    <p style="font-family:Arial,sans-serif;font-size:11px;color:#bbb;margin-top:20px;line-height:1.6;text-align:center;">Designed using Claude by Prof. K S Manikandan, IIM Tiruchirappalli, for educational purposes and verified by him.</p>
+  </div>
+
+  <!-- CLASSIFIER: QUESTION SCREEN -->
+  <div id="screen-cl-question" class="hidden">
+    <div class="q-meta" id="cl-meta">Question 1 of 7</div>
+    <div class="scenario-box" id="cl-scenario"></div>
+    <div class="question-text" id="cl-text"></div>
+    <div class="btn-row">
+      <button class="btn-answer" id="cl-btn-fail" onclick="clAnswer('fail')">🔴 Fails the Mom Test</button>
+      <button class="btn-answer" id="cl-btn-pass" onclick="clAnswer('pass')">🟢 Passes the Mom Test</button>
+    </div>
+    <div class="feedback-box" id="cl-feedback">
+      <div class="feedback-rule" id="cl-feedback-rule"></div>
+      <div class="feedback-text" id="cl-feedback-text"></div>
+    </div>
+    <button class="btn-next" id="cl-btn-next" onclick="clNext()">Next question →</button>
+    <button class="btn-secondary" onclick="goHome()">← Back to home</button>
+  </div>
+
+  <!-- CLASSIFIER: RESULTS SCREEN -->
+  <div id="screen-cl-results" class="hidden">
+    <div class="eyebrow">Your result — Red / Green Classifier</div>
+    <div class="score-display">
+      <div class="score-big" id="cl-score"></div>
+      <div class="score-label">out of 7 correct</div>
+    </div>
+    <div class="score-msg" id="cl-msg"></div>
+    <hr class="divider">
+    <div class="rule-breakdown" id="cl-breakdown"></div>
+    <button class="btn-primary" onclick="startClassifier()">Try a different set →</button>
+    <button class="btn-secondary" onclick="goHome()">← Back to home</button>
+  </div>
+
+  <!-- MAKEOVER: QUESTION SCREEN -->
+  <div id="screen-mk-question" class="hidden">
+    <div class="q-meta" id="mk-meta">Question 1 of 5</div>
+    <div class="scenario-box" id="mk-scenario"></div>
+    <div class="bad-label">Original question (bad)</div>
+    <div class="question-text" id="mk-bad"></div>
+    <div class="rewrite-label">Your rewrite</div>
+    <p style="font-family:Arial,sans-serif;font-size:12px;color:#888;margin-bottom:8px;line-height:1.5;">Write your improved version before revealing the model answer. The learning happens in the attempt.</p>
+    <textarea id="mk-textarea" rows="3" placeholder="Type a better version of this question…"></textarea>
+    <button class="btn-primary" id="mk-btn-reveal" onclick="mkReveal()">Show model answer</button>
+    <div class="model-answer-box" id="mk-model-box">
+      <div class="model-answer-label">Model answer</div>
+      <div class="model-answer-text" id="mk-model-text"></div>
+      <div class="model-why" id="mk-model-why"></div>
+    </div>
+    <p id="mk-rate-instruction" style="display:none;font-family:Arial,sans-serif;font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;background:#F7F5F0;padding:10px 14px;border-radius:6px;">Compare your rewrite honestly with the model answer above. Did your question avoid the product idea, anchor to a past event, and stay open-ended? Only you can judge this — be diligent. Your learning depends on the honesty of this step.</p>
+    <div class="self-rate" id="mk-self-rate">
+      <button class="btn-rate" id="mk-got" onclick="mkRate('got')">👍 I got it</button>
+      <button class="btn-rate" id="mk-missed" onclick="mkRate('missed')">👎 I missed it</button>
+    </div>
+    <button class="btn-next" id="mk-btn-next" onclick="mkNext()">Next question →</button>
+    <button class="btn-secondary" onclick="goHome()">← Back to home</button>
+  </div>
+
+  <!-- MAKEOVER: RESULTS SCREEN -->
+  <div id="screen-mk-results" class="hidden">
+    <div class="eyebrow">Your result — Question Makeover</div>
+    <div class="score-display">
+      <div class="score-big" id="mk-score"></div>
+      <div class="score-label">out of 5 you felt you got right</div>
+    </div>
+    <div class="score-msg" id="mk-msg"></div>
+    <hr class="divider">
+    <div class="mk-breakdown" id="mk-breakdown"></div>
+    <button class="btn-primary" onclick="startMakeover()">Try a different set →</button>
+    <button class="btn-secondary" onclick="goHome()">← Back to home</button>
+  </div>
+
+</div>
+
+<script>
+function showScreen(id) {
+  ["screen-home","screen-cl-question","screen-cl-results","screen-mk-question","screen-mk-results"]
+    .forEach(s => document.getElementById(s).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+function goHome() { showScreen("screen-home"); }
+
+/* ── CLASSIFIER DATA ── */
+const CL_ALL = [
+  { scenario:"Validating a meal-planning app", question:"Do you think a weekly meal planner would make your evenings less stressful?", answer:"fail", rule:"Rule 2", explain:"Asks for an opinion about a hypothetical future, not a past experience." },
+  { scenario:"Exploring personal finance habits", question:"Tell me about the last time you felt your spending got out of control.", answer:"pass", rule:"Rule 2", explain:"Anchors to a specific past event without revealing any product idea." },
+  { scenario:"Validating a fitness app", question:"Would you use an app that reminds you to work out every day?", answer:"fail", rule:"Rule 1", explain:"Pitches the idea disguised as a question — steers the conversation to your product." },
+  { scenario:"Exploring commute habits", question:"How did you get to work last Monday?", answer:"pass", rule:"Rule 2", explain:"Asks for a specific past fact — concrete and unbiased." },
+  { scenario:"Validating a language-learning app", question:"Don't you think learning a language is really hard on your own?", answer:"fail", rule:"Rule 1", explain:"Leading question nudges the customer toward agreeing with your premise." },
+  { scenario:"Exploring cooking habits", question:"How often do you cook at home in a typical week?", answer:"pass", rule:"Rule 2", explain:"Asks for a factual, specific behaviour without bias or a pitch." },
+  { scenario:"Validating a sleep-tracking wearable", question:"How much would you pay for a device that tracks and improves your sleep?", answer:"fail", rule:"Rule 2", explain:"Asks for a hypothetical future price — customers can't predict what they'd actually pay." },
+  { scenario:"Exploring sleep problems", question:"Tell me about the last night you slept really badly. What was going on?", answer:"pass", rule:"Rule 2", explain:"Anchors to a real past event and invites a specific story." },
+  { scenario:"Validating a freelancer invoicing tool", question:"Is managing invoices a big pain point for you?", answer:"fail", rule:"Rule 2", explain:"Asks for a general opinion — customers will confirm pain even if it's minor." },
+  { scenario:"Exploring freelancer workflows", question:"Walk me through how you handled your last invoice from start to payment.", answer:"pass", rule:"Rule 2", explain:"Asks for a specific past process — reveals real friction without leading." },
+  { scenario:"Validating a team collaboration tool", question:"Do you think your team would benefit from better communication tools?", answer:"fail", rule:"Rule 1", explain:"Frames the conversation around your idea rather than their actual life." },
+  { scenario:"Exploring team dynamics", question:"What happened the last time a project went off track in your team?", answer:"pass", rule:"Rule 2", explain:"Elicits a specific past story that reveals real pain and context." },
+  { scenario:"Validating a pet care app", question:"You'd find it useful to track your pet's medication from your phone, right?", answer:"fail", rule:"Rule 1", explain:"The question contains the solution — the customer is just being asked to agree." },
+  { scenario:"Exploring pet ownership habits", question:"How do you currently keep track of your pet's vet visits and medications?", answer:"pass", rule:"Rule 3", explain:"Short, open question — lets the customer do the talking about their real system." },
+  { scenario:"Validating a job board for creatives", question:"Would a job board just for designers help your job search?", answer:"fail", rule:"Rule 1", explain:"Pitches the idea directly — the customer can only react, not reveal." },
+  { scenario:"Exploring job search experiences", question:"Tell me about the last job you applied for. How did you find it?", answer:"pass", rule:"Rule 2", explain:"Specific past event that uncovers real behaviour without bias." },
+  { scenario:"Validating a mental wellness app", question:"If we built a daily mood-tracking feature, would that be something you'd use?", answer:"fail", rule:"Rule 1", explain:"Reveals the feature and asks for validation — customers tend to say yes to be polite." },
+  { scenario:"Exploring stress management habits", question:"When things get overwhelming at work, what do you usually do first?", answer:"pass", rule:"Rule 3", explain:"Open, life-focused question with no hint of a product — lets them reveal real coping habits." },
+  { scenario:"Validating a travel planning tool", question:"How often do you travel, and do you find it stressful to plan trips?", answer:"fail", rule:"Rule 3", explain:"Two questions at once — dominates the conversation instead of listening." },
+  { scenario:"Exploring travel planning habits", question:"Tell me about the last trip you planned. What took the most time?", answer:"pass", rule:"Rule 2", explain:"Single past-anchored question that invites a specific, detailed answer." },
+  { scenario:"Validating a homework help platform", question:"Do your kids struggle with homework? Would an AI tutor help?", answer:"fail", rule:"Rule 1", explain:"Jumps straight to the solution before understanding the parent's actual experience." },
+  { scenario:"Exploring parenting challenges", question:"What does your child's after-school routine usually look like?", answer:"pass", rule:"Rule 3", explain:"Open, life-focused — gives the parent space to surface struggles naturally." },
+  { scenario:"Validating a grocery delivery service", question:"Wouldn't it save you a lot of time if your groceries were delivered weekly?", answer:"fail", rule:"Rule 2", explain:"Hypothetical future framing with a leading 'wouldn't it' — not a real data point." },
+  { scenario:"Exploring grocery shopping habits", question:"How did you do your grocery shopping last week?", answer:"pass", rule:"Rule 2", explain:"Specific past behaviour — reveals the real process and any friction." },
+  { scenario:"Validating a remote work tool", question:"I'm building a tool to help remote workers stay focused. What do you think?", answer:"fail", rule:"Rule 1", explain:"Reveals the idea upfront and asks for an opinion — the Mom Test says they shouldn't even know you have an idea." },
+  { scenario:"Exploring remote work habits", question:"How did you structure your workday yesterday?", answer:"pass", rule:"Rule 2", explain:"Highly specific past question — reveals real habits and pain without any pitch." },
+  { scenario:"Validating a restaurant discovery app", question:"Do you think people would use an app that recommends restaurants based on mood?", answer:"fail", rule:"Rule 3", explain:"Asks about 'people' in general — deflects from their own experience and invites speculation." },
+  { scenario:"Exploring dining habits", question:"How did you decide where to eat the last time you went out?", answer:"pass", rule:"Rule 2", explain:"Past-specific and personal — reveals the actual decision-making process." },
+  { scenario:"Validating a habit-tracking app", question:"What habits are you trying to build? Would a tracker help?", answer:"fail", rule:"Rule 1", explain:"First question is fine, but immediately pitching a solution kills the discovery." },
+  { scenario:"Exploring personal goals", question:"Is there something you've been trying to do more consistently lately?", answer:"pass", rule:"Rule 3", explain:"Open and brief — keeps the founder quiet and lets the customer reveal real struggles." }
+];
+
+const RULES = ["Rule 1","Rule 2","Rule 3"];
+const RULE_LABELS = { "Rule 1":"Rule 1 — their life", "Rule 2":"Rule 2 — past specifics", "Rule 3":"Rule 3 — talk less" };
+
+let clQuestions=[], clCurrent=0, clScore=0, clTrack={};
+
+function shuffle(a){ let b=a.slice(); for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+
+function pickBalanced7(){
+  const byRule={};
+  RULES.forEach(r=>byRule[r]=shuffle(CL_ALL.filter(q=>q.rule===r)));
+  let picked=[byRule["Rule 1"][0],byRule["Rule 1"][1],byRule["Rule 2"][0],byRule["Rule 2"][1],byRule["Rule 3"][0],byRule["Rule 3"][1]];
+  const rest=shuffle(CL_ALL.filter(q=>!picked.includes(q)));
+  picked.push(rest[0]);
+  return shuffle(picked);
+}
+
+function startClassifier(){
+  clQuestions=pickBalanced7();
+  clCurrent=0; clScore=0;
+  clTrack={"Rule 1":{c:0,t:0},"Rule 2":{c:0,t:0},"Rule 3":{c:0,t:0}};
+  showScreen("screen-cl-question");
+  clLoad();
+}
+
+function clLoad(){
+  const q=clQuestions[clCurrent];
+  document.getElementById("cl-meta").textContent=`Question ${clCurrent+1} of 7`;
+  document.getElementById("cl-scenario").textContent=`Scenario: ${q.scenario}`;
+  document.getElementById("cl-text").textContent=`"${q.question}"`;
+  document.getElementById("cl-feedback").classList.remove("show");
+  const nb=document.getElementById("cl-btn-next");
+  nb.classList.remove("show");
+  nb.textContent=clCurrent+1<7?"Next question →":"See my results →";
+  const bf=document.getElementById("cl-btn-fail");
+  const bp=document.getElementById("cl-btn-pass");
+  bf.className="btn-answer"; bp.className="btn-answer";
+  bf.disabled=false; bp.disabled=false;
+}
+
+function clAnswer(chosen){
+  const q=clQuestions[clCurrent];
+  const ok=chosen===q.answer;
+  if(ok) clScore++;
+  clTrack[q.rule].t++;
+  if(ok) clTrack[q.rule].c++;
+  const bf=document.getElementById("cl-btn-fail");
+  const bp=document.getElementById("cl-btn-pass");
+  bf.disabled=true; bp.disabled=true;
+  if(chosen==="fail"){ bf.classList.add(ok?"correct":"wrong"); if(!ok) bp.classList.add("reveal"); }
+  else { bp.classList.add(ok?"correct":"wrong"); if(!ok) bf.classList.add("reveal"); }
+  document.getElementById("cl-feedback-rule").textContent=q.rule+" — "+(q.answer==="pass"?"Passes the Mom Test":"Fails the Mom Test");
+  document.getElementById("cl-feedback-text").textContent=q.explain;
+  document.getElementById("cl-feedback").classList.add("show");
+  document.getElementById("cl-btn-next").classList.add("show");
+}
+
+function clNext(){
+  clCurrent++;
+  if(clCurrent>=7){ clShowResults(); } else { clLoad(); }
+}
+
+function clShowResults(){
+  showScreen("screen-cl-results");
+  document.getElementById("cl-score").textContent=clScore;
+  const p=clScore/7;
+  let msg="";
+  if(p===1) msg="Perfect score! You have a strong instinct for questions that uncover real customer behaviour.";
+  else if(p>=0.71) msg="Good work. You're getting the hang of the Mom Test — revisit the rules where you slipped.";
+  else if(p>=0.43) msg="Keep going. The Mom Test takes practice — try another round and look for the pattern.";
+  else msg="This is a tricky skill. Re-read the three rules and try again — it clicks with repetition.";
+  document.getElementById("cl-msg").textContent=msg;
+  let html="";
+  RULES.forEach(r=>{
+    const t=clTrack[r].t, c=clTrack[r].c;
+    const pct=t>0?Math.round((c/t)*100):0;
+    html+=`<div class="rule-row"><div class="rule-label">${RULE_LABELS[r]}</div><div class="rule-bar-wrap"><div class="rule-bar" style="width:${pct}%"></div></div><div class="rule-score-txt">${c}/${t}</div></div>`;
+  });
+  document.getElementById("cl-breakdown").innerHTML=html;
+}
+
+/* ── MAKEOVER DATA ── */
+const MK_ALL = [
+  { scenario:"Meal-planning app", bad:"Do you think a weekly meal planner would make your evenings less stressful?", model:"Walk me through what your evenings looked like last week — dinner, kids, all of it.", why:"Shifts from a hypothetical opinion to a specific past story. Removes any mention of the product.", rule:"Rule 2" },
+  { scenario:"Freelancer payment tool", bad:"Is getting paid on time a big problem for you as a freelancer?", model:"Tell me about the last invoice you sent. How did that go?", why:"The original invites a vague yes/no. The rewrite anchors to a real past event and is short enough to let them talk.", rule:"Rule 2" },
+  { scenario:"Fitness app", bad:"Would you use an app that sends you daily workout reminders?", model:"What did your last week of exercise actually look like?", why:"Removes the product pitch entirely. Past-specific and open — reveals real behaviour, not aspirations.", rule:"Rule 1" },
+  { scenario:"Language-learning app", bad:"Don't you think it's hard to stay consistent when learning a language alone?", model:"Tell me about the last time you tried to learn something new on your own. How did that go?", why:"The original nudges agreement. The rewrite is open, past-specific, and reveals real consistency patterns.", rule:"Rule 1" },
+  { scenario:"Sleep-tracking wearable", bad:"How much would you pay for a device that tracks and improves your sleep?", model:"Have you ever bought anything to help you sleep better? What did you spend on it?", why:"Hypothetical pricing is unreliable. The rewrite anchors to a real past purchase — revealing actual willingness to pay.", rule:"Rule 2" },
+  { scenario:"Team collaboration tool", bad:"Do you think your team would benefit from better communication tools?", model:"What happened the last time something fell through the cracks in your team?", why:"The original frames the conversation around your solution. The rewrite elicits a real story about a real failure.", rule:"Rule 1" },
+  { scenario:"Travel planning app", bad:"How often do you travel, and do you find it stressful to plan trips?", model:"Tell me about the last trip you planned. What took the most time?", why:"Two questions at once dominates the conversation. The rewrite is one focused past question.", rule:"Rule 3" },
+  { scenario:"Remote work productivity tool", bad:"I'm building a tool to help remote workers stay focused. Does that sound useful to you?", model:"How did you structure your workday yesterday?", why:"Revealing the idea invites politeness, not honesty. The rewrite uncovers real habits without a hint of a product.", rule:"Rule 1" },
+  { scenario:"Grocery delivery service", bad:"Wouldn't it save you a lot of time if your groceries were delivered automatically each week?", model:"How did you handle grocery shopping last week?", why:"'Wouldn't it' is a leading hypothetical. The rewrite is short, past-specific, and lets them describe the real process.", rule:"Rule 2" },
+  { scenario:"Mental wellness app", bad:"If we built a daily mood-tracking feature, would that be something you'd use?", model:"When things get overwhelming at work, what do you usually do first?", why:"Revealing the feature invites agreement. The rewrite is life-focused and open — no product mentioned at all.", rule:"Rule 1" },
+  { scenario:"Restaurant discovery app", bad:"Do you think people would use an app that recommends restaurants based on your mood?", model:"How did you decide where to eat the last time you went out?", why:"Asking about 'people' avoids their own experience. The rewrite is personal, past-specific, and reveals real decision-making.", rule:"Rule 3" },
+  { scenario:"Habit-tracking app", bad:"What habits are you trying to build? Would a tracker help you stay on top of them?", model:"Is there something you've been trying to do more consistently lately?", why:"Jumping to a solution after one question kills discovery. The rewrite is brief and open.", rule:"Rule 1" },
+  { scenario:"Parenting homework app", bad:"Do your kids struggle with homework? Would an AI tutor help?", model:"What does your child's after-school routine usually look like?", why:"The original jumps to a solution before understanding the parent's life. The rewrite is life-focused.", rule:"Rule 1" },
+  { scenario:"Personal finance tool", bad:"Would you find it useful to get weekly alerts when you're overspending?", model:"Tell me about the last time you looked at your bank account and felt surprised.", why:"The feature is baked into the question. The rewrite surfaces a real emotional moment tied to a specific past event.", rule:"Rule 1" },
+  { scenario:"Job board for designers", bad:"Would a job board built just for designers make your job search easier?", model:"Tell me about the last job you applied for. How did you find it?", why:"The original pitches the product directly. The rewrite uncovers the actual job-search process without revealing any idea.", rule:"Rule 1" },
+  { scenario:"Pet care app", bad:"Would you find it helpful to track your pet's medication schedule on your phone?", model:"How do you currently keep track of your pet's vet visits and medications?", why:"The solution is embedded in the question. The rewrite lets them describe their real system.", rule:"Rule 3" },
+  { scenario:"Freelancer project tool", bad:"Do you ever feel like you're juggling too many client projects at once?", model:"Walk me through how you managed your workload last month.", why:"The original is a leading yes/no everyone says yes to. The rewrite asks for a specific past period.", rule:"Rule 2" },
+  { scenario:"Online learning platform", bad:"Would you pay for a platform that gives you structured courses to learn new skills?", model:"Tell me about the last time you tried to learn a new skill. What did you do?", why:"Hypothetical pricing and a product pitch in one question. The rewrite reveals real learning behaviour.", rule:"Rule 2" }
+];
+
+let mkQuestions=[], mkCurrent=0, mkScore=0, mkRatings=[];
+
+function pick5(){
+  const byRule={};
+  RULES.forEach(r=>byRule[r]=shuffle(MK_ALL.filter(q=>q.rule===r)));
+  let picked=[byRule["Rule 1"][0],byRule["Rule 1"][1],byRule["Rule 2"][0],byRule["Rule 2"][1],byRule["Rule 3"][0]];
+  return shuffle(picked);
+}
+
+function startMakeover(){
+  mkQuestions=pick5();
+  mkCurrent=0; mkScore=0; mkRatings=[];
+  showScreen("screen-mk-question");
+  mkLoad();
+}
+
+function mkLoad(){
+  const q=mkQuestions[mkCurrent];
+  document.getElementById("mk-meta").textContent=`Question ${mkCurrent+1} of 5`;
+  document.getElementById("mk-scenario").textContent=`Scenario: ${q.scenario}`;
+  document.getElementById("mk-bad").textContent=`"${q.bad}"`;
+  document.getElementById("mk-textarea").value="";
+  document.getElementById("mk-textarea").disabled=false;
+  document.getElementById("mk-model-box").classList.remove("show");
+  document.getElementById("mk-self-rate").classList.remove("show");
+  document.getElementById("mk-btn-reveal").style.display="block";
+  document.getElementById("mk-btn-reveal").disabled=false;
+  const nb=document.getElementById("mk-btn-next");
+  nb.classList.remove("show");
+  nb.textContent=mkCurrent+1<5?"Next question →":"See my results →";
+  document.getElementById("mk-rate-instruction").style.display="none";
+  document.getElementById("mk-got").className="btn-rate";
+  document.getElementById("mk-got").disabled=false;
+  document.getElementById("mk-missed").className="btn-rate";
+  document.getElementById("mk-missed").disabled=false;
+}
+
+function mkReveal(){
+  const q=mkQuestions[mkCurrent];
+  document.getElementById("mk-textarea").disabled=true;
+  document.getElementById("mk-btn-reveal").style.display="none";
+  document.getElementById("mk-model-text").textContent=`"${q.model}"`;
+  document.getElementById("mk-model-why").textContent=q.why;
+  document.getElementById("mk-model-box").classList.add("show");
+  document.getElementById("mk-rate-instruction").style.display="block";
+  document.getElementById("mk-self-rate").classList.add("show");
+}
+
+function mkRate(val){
+  if(val==="got"){ mkScore++; mkRatings.push("got"); document.getElementById("mk-got").className="btn-rate selected-got"; document.getElementById("mk-missed").className="btn-rate"; }
+  else { mkRatings.push("missed"); document.getElementById("mk-missed").className="btn-rate selected-missed"; document.getElementById("mk-got").className="btn-rate"; }
+  document.getElementById("mk-got").disabled=true;
+  document.getElementById("mk-missed").disabled=true;
+  document.getElementById("mk-btn-next").classList.add("show");
+}
+
+function mkNext(){
+  mkCurrent++;
+  if(mkCurrent>=5){ mkShowResults(); } else { mkLoad(); }
+}
+
+function mkShowResults(){
+  showScreen("screen-mk-results");
+  document.getElementById("mk-score").textContent=mkScore;
+  const p=mkScore/5;
+  let msg="";
+  if(p===1) msg="Excellent — you rewrote all five questions in the spirit of the Mom Test. Well done.";
+  else if(p>=0.6) msg="Good instincts. Review the questions you marked as missed and look at what the model answer did differently.";
+  else msg="The Mom Test rewrite takes practice. Focus on anchoring every question in a specific past event.";
+  document.getElementById("mk-msg").textContent=msg;
+  let html="";
+  mkQuestions.forEach((q,i)=>{
+    const r=mkRatings[i]||"skip";
+    const dotClass=r==="got"?"dot-got":r==="missed"?"dot-missed":"dot-skip";
+    const label=r==="got"?"Got it":r==="missed"?"Missed it":"Skipped";
+    html+=`<div class="mk-result-row"><div class="mk-dot ${dotClass}"></div><div style="flex:1;color:#444;">${q.scenario}</div><div style="color:#888;font-size:12px;">${label}</div></div>`;
+  });
+  document.getElementById("mk-breakdown").innerHTML=html;
+}
+</script>
+</body>
+</html>
